@@ -27,6 +27,7 @@ class CestParser
         $this->reflection = new ReflectionClass($classname);
     }
 
+
     /**
      * Retrieves a list of all Scenarios
      * 
