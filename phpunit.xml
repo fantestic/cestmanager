@@ -5,18 +5,13 @@
   xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd"
   backupGlobals="false"
   colors="true"
+  bootstrap="vendor/autoload.php"
 >
   <coverage processUncoveredFiles="true">
     <include>
       <directory suffix=".php">src</directory>
     </include>
   </coverage>
-  <php>
-    <ini name="error_reporting" value="-1"/>
-    <server name="APP_ENV" value="test" force="true"/>
-    <server name="SHELL_VERBOSITY" value="-1"/>
-    <env name="PHPUNIT_PRETTY_PRINT_PROGRESS" value="true" />
-  </php>
   <testsuites>
     <testsuite name="Fantestic CestManager Test Suite">
       <directory>tests</directory>
