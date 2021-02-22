@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  * @author Gerald Baumeister <gerald@fantestic.io>
  * @license http://www.apache.org/licenses/LICENSE-2.0
  */
-class CestParserTest extends TestCase
+final class CestParserTest extends TestCase
 {
     public function testThrowsClassNotFoundException() :void
     {
