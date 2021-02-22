@@ -3,10 +3,8 @@
 declare(strict_types = 1);
 namespace Fantestic\CestManager\Tests\Unit;
 
-use App\Tests\Helper\FunctionProvider\RealpathFunctionProvider as FunctionProviderRealpathFunctionProvider;
 use Fantestic\CestManager\Exception\FileNotFoundException;
 use Fantestic\CestManager\Finder;
-use Fantestic\CestManager\Tests\PhpMock\FunctionProvider\FileExistsFunctionProvider;
 use Fantestic\CestManager\Tests\PhpMock\FunctionProvider\RealpathFunctionProvider;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
@@ -50,7 +48,7 @@ class FinderTest extends  TestCase
     public function testHasFileReturnsTrueIfFileExists() :void
     {
         $finder = new Finder($this->root->url());
-        $filename = current($this->sampleStructure());
+        $filename = key($this->sampleStructure());
         $this->assertTrue($finder->hasFile($filename));
     }
 
@@ -72,18 +70,27 @@ class FinderTest extends  TestCase
         $this->assertSame($expected, iterator_to_array($files));
     }
 
-    private function arrayReverseRecursive($arr) {
-        foreach ($arr as $key => $val) {
-            if (is_array($val))
-                $arr[$key] = $this->arrayReverseRecursive($val);
-        }
-        return array_reverse($arr);
+
+    public function testGetFileContentsReturnsContent() :void
+    {
+        $finder = new Finder($this->root->url());
+        $content = $finder->getFileContents('/ExampleCest.php');
+        $this->assertSame($this->sampleStructure()['ExampleCest.php'], $content);
     }
+
+
+    public function testGetFileContentsThrowsExceptionIfFileDoesntExist() :void
+    {
+        $this->expectException(FileNotFoundException::class);
+        $finder = new Finder($this->root->url());
+        $finder->getFileContents(self::NON_EXISTING_FILE);
+    }
+
 
     private function sampleStructure() :array
     {
         return [
-            'ExampleCest.php' => '',
+            'ExampleCest.php' => 'SampleContent',
             'SubDir' => [
                 'Example2Cest.php' => '',
             ],

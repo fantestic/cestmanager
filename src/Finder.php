@@ -3,7 +3,6 @@
 declare(strict_types = 1);
 namespace Fantestic\CestManager;
 
-use App\CodeParser\Filesystem\Exception\FileNotFoundException as ExceptionFileNotFoundException;
 use ArrayObject;
 use Fantestic\CestManager\Exception\FileNotFoundException;
 use Iterator;
@@ -37,7 +36,10 @@ class Finder
 
 
     /**
-     * @inheritdoc 
+     * Checks if a file exists in the current repository.
+     * 
+     * @param string $subpath 
+     * @return bool 
      */
     public function hasFile(string $subpath): bool
     {
@@ -46,9 +48,12 @@ class Finder
 
 
     /**
-     * @inheritdoc
+     * 
+     * @param string $subpath 
+     * @return string 
+     * @throws FileNotFoundException 
      */
-    public function getFileContent(string $subpath) :string
+    public function getFileContents(string $subpath) :string
     {
         if (!$this->hasFile($subpath)) {
             throw new FileNotFoundException(
@@ -60,7 +65,9 @@ class Finder
 
 
     /**
-     * @inheritdoc
+     * Returns a flat list of all files.
+     * 
+     * @return string[] 
      */
     public function listFiles() :Iterator
     {
@@ -89,15 +96,14 @@ class Finder
     }
 
 
+    /**
+     * 
+     * @param string $fullpath 
+     * @return array 
+     */
     private function list(string $fullpath) :array
     {
         return array_diff(scandir($fullpath), ['.', '..']);
-    }
-
-
-    private function convertToSubpath(string $fullpath) :string
-    {
-        return substr($fullpath, strlen($this->basepath));
     }
 
 
