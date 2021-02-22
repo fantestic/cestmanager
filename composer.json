@@ -2,10 +2,6 @@
     "name": "fantestic/cest-manager",
     "description": "Manage Codeception Cests via Php",
     "type": "library",
-    "require-dev": {
-        "phpunit/phpunit": "^9.5",
-        "mikey179/vfsstream": "^1.6"
-    },
     "license": "Apache-2.0",
     "authors": [
         {
@@ -17,6 +13,11 @@
     "require": {
         "php": ">=7.2.5",
         "nikic/php-parser": "^4.10"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5",
+        "mikey179/vfsstream": "^1.6",
+        "php-mock/php-mock-phpunit": "^2.6"
     },
     "autoload": {
         "psr-4": {
