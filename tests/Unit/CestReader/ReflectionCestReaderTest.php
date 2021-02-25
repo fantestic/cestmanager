@@ -1,9 +1,9 @@
 <?php
 
 declare(strict_types = 1);
-namespace Fantestic\CestManager\Tests\Unit;
+namespace Fantestic\CestManager\Tests\Unit\CestReader;
 
-use Fantestic\CestManager\CestParser;
+use Fantestic\CestManager\CestReader\ReflectionCestReader;
 use Fantestic\CestManager\Tests\Cest\ExampleCest;
 use Fantestic\CestManager\Exception\ClassNotFoundException;
 use PHPUnit\Framework\TestCase;
@@ -14,21 +14,22 @@ use PHPUnit\Framework\TestCase;
  * @author Gerald Baumeister <gerald@fantestic.io>
  * @license http://www.apache.org/licenses/LICENSE-2.0
  */
-final class CestParserTest extends TestCase
+final class ReflectionCestReaderTest extends TestCase
 {
     public function testThrowsClassNotFoundException() :void
     {
         $this->expectException(ClassNotFoundException::class);
-        new CestParser('Fantestic\CestManager\A\NonExisting\ClassName');
+        $cestReader = new ReflectionCestReader();
+        $cestReader->getScenarioNames('Fantestic\CestManager\A\NonExisting\ClassName');
     }
 
 
     public function testGetScenarioNamesReturnsMethods() :void
     {
-        $parser = new CestParser(ExampleCest::class);
+        $parser = new ReflectionCestReader();
         $expected = [
             'theFirstTest'
         ];
-        $this->assertSame($expected, $parser->getScenarioNames());
+        $this->assertSame($expected, $parser->getScenarioNames(ExampleCest::class));
     }
 }

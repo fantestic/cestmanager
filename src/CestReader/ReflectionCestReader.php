@@ -1,42 +1,30 @@
 <?php
 
 declare(strict_types = 1);
-namespace Fantestic\CestManager;
+namespace Fantestic\CestManager\CestReader;
 
 use Fantestic\CestManager\Exception\ClassNotFoundException;
 use ReflectionClass;
 
 /**
- * Gives access to a Cest
+ * Read Information via the Php-Reflection API. Can be used for high-performance
+ * Read-Access to Cest-Objects.
  * 
  * @package Fantestic/CestManager
  * @author Gerald Baumeister <gerald@fantestic.io>
  * @license http://www.apache.org/licenses/LICENSE-2.0
  */
-class CestParser
+class ReflectionCestReader implements CestReaderInterface
 {
-    private ReflectionClass $reflection;
-
-    public function __construct(string $classname)
-    {
-        if (!class_exists($classname)) {
-            throw new ClassNotFoundException(
-                "The class '{$classname}' could not be found!"
-            );
-        }
-        $this->reflection = new ReflectionClass($classname);
-    }
-
-
     /**
      * Retrieves a list of all Scenarios
      * 
      * @return string[] 
      */
-    public function getScenarioNames(string $class) :array
+    public function getScenarioNames(string $classname) :array
     {
         $scenarios = [];
-        foreach($this->reflection->getMethods() as $method) {
+        foreach($this->makeReflectionClass($classname)->getMethods() as $method) {
             if ($method->isPublic() && substr($method->getName(), 0, 1) !== '_') {
                 $scenarios[] = $method->getName();
             }
@@ -45,7 +33,7 @@ class CestParser
     }
 
 
-    private function makeReflectionCLass(string $classname) :ReflectionClass
+    private function makeReflectionClass(string $classname) :ReflectionClass
     {
         if (!class_exists($classname)) {
             throw new ClassNotFoundException(
