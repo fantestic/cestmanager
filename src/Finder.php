@@ -98,7 +98,6 @@ class Finder
             throw new FileNotFoundException("'{$subpath}' is not a file.");
         }
         $fullDirectoryPath = dirname($this->buildFullpath($subpath));
-        var_dump($fullDirectoryPath);
         if(!$this->isWriteable($this->buildSubpath($fullDirectoryPath))) {
             throw new InsufficientPermissionException(
                 "Cant remove file '{$subpath}' due to insufficient permissions."
