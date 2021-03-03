@@ -15,28 +15,15 @@ use ReflectionClass;
  */
 class CestParser
 {
-    private ReflectionClass $reflection;
-
-    public function __construct(string $classname)
-    {
-        if (!class_exists($classname)) {
-            throw new ClassNotFoundException(
-                "The class '{$classname}' could not be found!"
-            );
-        }
-        $this->reflection = new ReflectionClass($classname);
-    }
-
-
     /**
      * Retrieves a list of all Scenarios
      * 
      * @return string[] 
      */
-    public function getScenarioNames(string $class) :array
+    public function getScenarioNames(string $classname) :array
     {
         $scenarios = [];
-        foreach($this->reflection->getMethods() as $method) {
+        foreach($this->makeReflectionClass($classname)->getMethods() as $method) {
             if ($method->isPublic() && substr($method->getName(), 0, 1) !== '_') {
                 $scenarios[] = $method->getName();
             }
