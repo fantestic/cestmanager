@@ -45,7 +45,7 @@ class CestParser
     }
 
 
-    private function makeReflectionCLass(string $classname) :ReflectionClass
+    private function makeReflectionClass(string $classname) :ReflectionClass
     {
         if (!class_exists($classname)) {
             throw new ClassNotFoundException(

@@ -5,7 +5,9 @@ namespace Fantestic\CestManager;
 
 use ArrayObject;
 use Fantestic\CestManager\Exception\FileNotFoundException;
+use Fantestic\CestManager\Exception\InsufficientPermissionException;
 use Iterator;
+use RuntimeException;
 
 /**
  * Searches the filesystem for files and folders.
@@ -80,6 +82,39 @@ class Finder
     /**
      * 
      * @param string $subpath 
+     * @return void 
+     * @throws FileNotFoundException
+     * @throws InsufficientPermissionException
+     * @throws RuntimeException 
+     */
+    public function removeFile(string $subpath) :void
+    {
+        if (!$this->hasFile($subpath)) {
+            throw new FileNotFoundException(
+                "File '{$subpath}' could not be found."
+            );
+        }
+        if (!$this->isFile($subpath)) {
+            throw new FileNotFoundException("'{$subpath}' is not a file.");
+        }
+        $fullDirectoryPath = dirname($this->buildFullpath($subpath));
+        if(!$this->isWriteable($this->buildSubpath($fullDirectoryPath))) {
+            throw new InsufficientPermissionException(
+                "Cant remove file '{$subpath}' due to insufficient permissions."
+            );
+        }
+        $status = unlink($this->buildFullpath($subpath));
+        if ($status !== true) {
+            throw new \RuntimeException(
+                "Could not delete '{$subpath}'."
+            );
+        }
+    }
+
+
+    /**
+     * 
+     * @param string $subpath 
      * @return array 
      */
     private function walkRecursively(string $subpath = '') :array
@@ -98,12 +133,34 @@ class Finder
 
     /**
      * 
+     * @param string $subpath 
+     * @return bool 
+     */
+    private function isFile(string $subpath) :bool
+    {
+        return is_file($this->buildFullpath($subpath));
+    }
+
+
+    /**
+     * 
      * @param string $fullpath 
      * @return array 
      */
     private function list(string $fullpath) :array
     {
         return array_diff(scandir($fullpath), ['.', '..']);
+    }
+
+
+    /**
+     * 
+     * @param string $subpath 
+     * @return bool 
+     */
+    private function isWriteable(string $subpath) :bool
+    {
+        return is_writable($this->buildFullpath($subpath));
     }
 
 
@@ -116,6 +173,12 @@ class Finder
     private function buildFullpath(string $subpath) :string
     {
         return $this->mergePath($this->basepath, $subpath);
+    }
+
+
+    private function buildSubpath(string $fullpath) :string
+    {
+        return substr($fullpath, 0, strlen($this->basepath));
     }
 
 
