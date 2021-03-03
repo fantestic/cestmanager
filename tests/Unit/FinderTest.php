@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Fantestic\CestManager\Tests\Unit;
 
 use Fantestic\CestManager\Exception\FileNotFoundException;
+use Fantestic\CestManager\Exception\InsufficientPermissionException;
 use Fantestic\CestManager\Finder;
 use Fantestic\CestManager\Tests\PhpMock\FunctionProvider\RealpathFunctionProvider;
 use org\bovigo\vfs\vfsStream;
@@ -84,6 +85,38 @@ final class FinderTest extends  TestCase
         $this->expectException(FileNotFoundException::class);
         $finder = new Finder($this->root->url());
         $finder->getFileContents(self::NON_EXISTING_FILE);
+    }
+
+
+    public function testRemoveFileRemovesFile() :void
+    {
+        $finder = new Finder($this->root->url());
+        $finder->removeFile('SubDir/Example2Cest.php');
+        $this->assertFalse($finder->hasFile('SubDir/Example2Cest.php'));
+    }
+
+
+    public function testFileRemovesThrowsExceptionWhenDeletingAFolder() :void
+    {
+        $this->expectException(FileNotFoundException::class);
+        $finder = new Finder($this->root->url());
+        $finder->removeFile('SubDir');
+    }
+
+    public function testFileRemovesThrowsExceptionWhenFileIsLocked() :void
+    {
+        $this->expectException(InsufficientPermissionException::class);
+        $this->root->getChild('SubDir')->chmod(0);
+        $finder = new Finder($this->root->url());
+        $finder->removeFile('SubDir/Example2Cest.php');
+    }
+
+
+    public function testFileRemovesThrowsExceptionWhenFileIsNotFound() :void
+    {
+        $this->expectException(FileNotFoundException::class);
+        $finder = new Finder($this->root->url());
+        $finder->removeFile(self::NON_EXISTING_FILE);
     }
 
 
