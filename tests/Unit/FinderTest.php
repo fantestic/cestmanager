@@ -3,6 +3,7 @@
 declare(strict_types = 1);
 namespace Fantestic\CestManager\Tests\Unit;
 
+use Fantestic\CestManager\Exception\FileExistsException;
 use Fantestic\CestManager\Exception\FileNotFoundException;
 use Fantestic\CestManager\Exception\InsufficientPermissionException;
 use Fantestic\CestManager\Finder;
@@ -27,6 +28,10 @@ final class FinderTest extends  TestCase
     private vfsStreamDirectory $root;
 
     const NON_EXISTING_FILE = '/ANonExistingFile.php';
+    const ROOTFILE_PATH = 'ExampleCest.php';
+    const SUBDIR_PATH = 'SubDir';
+    const NESTEDFILE_NAME = 'Example2Cest.php';
+    const NESTEDFILE_PATH = 'SubDir/Example2Cest.php';
 
 
     public function setUp() :void
@@ -66,7 +71,7 @@ final class FinderTest extends  TestCase
         $files = (new Finder($this->root->url()))->listFiles();
         $expected = [
             'ExampleCest.php',
-            'SubDir/Example2Cest.php',
+            self::NESTEDFILE_PATH,
         ];
         $this->assertSame($expected, iterator_to_array($files));
     }
@@ -75,8 +80,8 @@ final class FinderTest extends  TestCase
     public function testGetFileContentsReturnsContent() :void
     {
         $finder = new Finder($this->root->url());
-        $content = $finder->getFileContents('/ExampleCest.php');
-        $this->assertSame($this->sampleStructure()['ExampleCest.php'], $content);
+        $content = $finder->getFileContents(self::ROOTFILE_PATH);
+        $this->assertSame($this->sampleStructure()[self::ROOTFILE_PATH], $content);
     }
 
 
@@ -91,8 +96,8 @@ final class FinderTest extends  TestCase
     public function testRemoveFileRemovesFile() :void
     {
         $finder = new Finder($this->root->url());
-        $finder->removeFile('SubDir/Example2Cest.php');
-        $this->assertFalse($finder->hasFile('SubDir/Example2Cest.php'));
+        $finder->removeFile(self::NESTEDFILE_PATH);
+        $this->assertFalse($finder->hasFile(self::NESTEDFILE_PATH));
     }
 
 
@@ -100,15 +105,16 @@ final class FinderTest extends  TestCase
     {
         $this->expectException(FileNotFoundException::class);
         $finder = new Finder($this->root->url());
-        $finder->removeFile('SubDir');
+        $finder->removeFile(self::SUBDIR_PATH);
     }
+
 
     public function testFileRemovesThrowsExceptionWhenFileIsLocked() :void
     {
         $this->expectException(InsufficientPermissionException::class);
-        $this->root->getChild('SubDir')->chmod(0);
+        $this->root->getChild(self::SUBDIR_PATH)->chmod(0);
         $finder = new Finder($this->root->url());
-        $finder->removeFile('SubDir/Example2Cest.php');
+        $finder->removeFile(self::NESTEDFILE_PATH);
     }
 
 
@@ -120,12 +126,39 @@ final class FinderTest extends  TestCase
     }
 
 
+    public function testCreateFileCreatesFile() :void
+    {
+        $filename = 'NewFile.php';
+        $content = '<?php echo "content";';
+        $finder = new Finder($this->root->url());
+        $finder->createFile($filename, $content);
+        $this->assertSame($content, $finder->getFileContents($filename));
+    }
+
+
+    public function testCreateFileThrowsExceptionIfFileExists() :void
+    {
+        $this->expectException(FileExistsException::class);
+        $finder = new Finder($this->root->url());
+        $finder->createFile(self::ROOTFILE_PATH, 'contents');
+    }
+
+
+    public function testCreateFileThrowsExceptionIfInsufficientPermissions() :void
+    {
+        $this->expectException(InsufficientPermissionException::class);
+        $finder = new Finder($this->root->url());
+        $this->root->getChild(self::SUBDIR_PATH)->chmod(0);
+        $finder->createFile(self::SUBDIR_PATH.'/ShouldFail.txt', 'contents');
+    }
+
+
     private function sampleStructure() :array
     {
         return [
-            'ExampleCest.php' => 'SampleContent',
-            'SubDir' => [
-                'Example2Cest.php' => '',
+            self::ROOTFILE_PATH => 'SampleContent',
+            self::SUBDIR_PATH => [
+                self::NESTEDFILE_NAME => '',
             ],
         ];
     }

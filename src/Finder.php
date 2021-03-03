@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Fantestic\CestManager;
 
 use ArrayObject;
+use Fantestic\CestManager\Exception\FileExistsException;
 use Fantestic\CestManager\Exception\FileNotFoundException;
 use Fantestic\CestManager\Exception\InsufficientPermissionException;
 use Iterator;
@@ -97,16 +98,45 @@ class Finder
         if (!$this->isFile($subpath)) {
             throw new FileNotFoundException("'{$subpath}' is not a file.");
         }
-        $fullDirectoryPath = dirname($this->buildFullpath($subpath));
-        if(!$this->isWriteable($this->buildSubpath($fullDirectoryPath))) {
+        if(!$this->canWriteInContainingDirectory($subpath)) {
             throw new InsufficientPermissionException(
                 "Cant remove file '{$subpath}' due to insufficient permissions."
             );
         }
         $status = unlink($this->buildFullpath($subpath));
-        if ($status !== true) {
+        if (true !== $status) {
             throw new \RuntimeException(
                 "Could not delete '{$subpath}'."
+            );
+        }
+    }
+
+
+    /**
+     * 
+     * @param string $subpath 
+     * @param string $contents 
+     * @return void 
+     * @throws FileExistsException 
+     * @throws InsufficientPermissionException 
+     * @throws RuntimeException 
+     */
+    public function createFile(string $subpath, string $contents) :void
+    {
+        if ($this->hasFile($subpath)) {
+            throw new FileExistsException(
+                "The file '{$subpath}' already exists."
+            );
+        }
+        if(!$this->canWriteInContainingDirectory($subpath)) {
+            throw new InsufficientPermissionException(
+                "Cant create file '{$subpath}' due to insufficient permissions."
+            );
+        }
+        $status = file_put_contents($this->buildFullpath($subpath), $contents);
+        if (false === $status) {
+            throw new \RuntimeException(
+                "Could not create file '{$subpath}'."
             );
         }
     }
@@ -150,6 +180,21 @@ class Finder
     private function list(string $fullpath) :array
     {
         return array_diff(scandir($fullpath), ['.', '..']);
+    }
+
+
+    /**
+     * Returns true if the directory of the containing $subpath is writeable
+     * 
+     * @param string $subpath 
+     * @return string 
+     */
+    private function canWriteInContainingDirectory(string $subpath) :bool
+    {
+        $fullDirectoryPath = dirname($this->buildFullpath($subpath));
+        return $this->isWriteable(
+            $this->buildSubpath($fullDirectoryPath)
+        );
     }
 
 
