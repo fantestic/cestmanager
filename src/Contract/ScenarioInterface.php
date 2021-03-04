@@ -14,7 +14,9 @@ namespace Fantestic\CestManager\Contract;
 interface ScenarioInterface
 {
     /**
-     * @return Step[]
+     * @return StepInterface[]
      */
     public function getSteps() :iterable;
+
+    public function getMethodName() :string;
 }

@@ -11,15 +11,7 @@ namespace Fantestic\CestManager\Contract;
  * @author Gerald Baumeister <gerald@fantestic.io>
  * @license http://www.apache.org/licenses/LICENSE-2.0
  */
-interface StepInterface
+interface ArgumentInterface
 {
-    public function getPosition() :int;
-
-    public function getAction() :ActionInterface;
-
-    /**
-     * 
-     * @return ArgumentInterface[] 
-     */
-    public function getArguments() :iterable;
+    public function getValue() :mixed;
 }

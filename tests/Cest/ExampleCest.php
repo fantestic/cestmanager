@@ -12,7 +12,7 @@ class ExampleCest
 
 
     /**
-     * 
+     * @fantestic
      * @return void 
      */
     public function theFirstTest(\AcceptanceTester $I) :void
