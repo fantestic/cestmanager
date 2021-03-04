@@ -27,13 +27,14 @@ class AstBuilder
     }
 
 
+
     /**
      * 
      * @param ScenarioInterface $scenario 
      * @return Method 
      * @throws LogicException 
      */
-    public function generateScenarioAst(ScenarioInterface $scenario) :Method
+    public function buildScenarioAst(ScenarioInterface $scenario) :Method
     {
         $f = $this->builderFactory;
         $method = $f->method($scenario->getMethodName())

@@ -24,7 +24,7 @@ final class AstBuilderTest extends TestCase
     public function testGeneratesValidAst() :void
     {
         $gen = new AstBuilder();
-        $res = $gen->generateScenarioAst($this->sampleTree());
+        $res = $gen->buildScenarioAst($this->sampleTree());
         $pp  = new Standard();
         $code = $pp->prettyPrint([$res->getNode()]);
         $this->assertSame($this->sampleTreeExpectation(), $code);
