@@ -20,9 +20,10 @@ use PhpParser\Node\Name\FullyQualified;
  */
 class ScenarioGenerator
 {
-    public function __construct(
-        private BuilderFactory $builderFactory
-    ) { }
+    public function __construct()
+    {
+        $this->builderFactory = new BuilderFactory();
+    }
 
 
     /**

@@ -10,7 +10,6 @@ use Fantestic\CestManager\Tests\Doubles\Argument;
 use Fantestic\CestManager\Tests\Doubles\Parameter;
 use Fantestic\CestManager\Tests\Doubles\Scenario;
 use Fantestic\CestManager\Tests\Doubles\Step;
-use PhpParser\BuilderFactory;
 use PhpParser\PrettyPrinter\Standard;
 use PHPUnit\Framework\TestCase;
 
@@ -24,7 +23,7 @@ final class ScenarioGeneratorTest extends TestCase
 {
     public function testGeneratesValidAst() :void
     {
-        $gen = new ScenarioGenerator(new BuilderFactory());
+        $gen = new ScenarioGenerator();
         $res = $gen->generateScenarioAst($this->sampleTree());
         $pp  = new Standard();
         $code = $pp->prettyPrint([$res->getNode()]);
