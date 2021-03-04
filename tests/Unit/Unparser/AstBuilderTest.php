@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Fantestic\CestManager\Tests\Unit\Unparser;
 
 use Fantestic\CestManager\Contract\ScenarioInterface;
-use Fantestic\CestManager\Unparser\ScenarioGenerator;
+use Fantestic\CestManager\Unparser\AstBuilder;
 use Fantestic\CestManager\Tests\Doubles\Action;
 use Fantestic\CestManager\Tests\Doubles\Argument;
 use Fantestic\CestManager\Tests\Doubles\Parameter;
@@ -19,11 +19,11 @@ use PHPUnit\Framework\TestCase;
  * @author Gerald Baumeister <gerald@fantestic.io>
  * @license http://www.apache.org/licenses/LICENSE-2.0
  */
-final class ScenarioGeneratorTest extends TestCase
+final class AstBuilderTest extends TestCase
 {
     public function testGeneratesValidAst() :void
     {
-        $gen = new ScenarioGenerator();
+        $gen = new AstBuilder();
         $res = $gen->generateScenarioAst($this->sampleTree());
         $pp  = new Standard();
         $code = $pp->prettyPrint([$res->getNode()]);

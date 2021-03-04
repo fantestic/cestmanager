@@ -12,13 +12,13 @@ use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Name\FullyQualified;
 
 /**
- * 
+ * Builds AST f
  * 
  * @author Gerald Baumeister <gerald.b@whosonlocation.com>
  * @package Fantestic\CestManager
  * @license http://www.apache.org/licenses/LICENSE-2.0
  */
-class ScenarioGenerator
+class AstBuilder
 {
     public function __construct()
     {
