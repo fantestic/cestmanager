@@ -12,7 +12,8 @@ use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Name\FullyQualified;
 
 /**
- * Builds AST f
+ * Builds AST from internal Test-Representations. The AST can then be unparsed
+ * into PHP-code.
  * 
  * @author Gerald Baumeister <gerald.b@whosonlocation.com>
  * @package Fantestic\CestManager
