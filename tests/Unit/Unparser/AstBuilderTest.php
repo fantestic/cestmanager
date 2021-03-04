@@ -6,12 +6,16 @@ namespace Fantestic\CestManager\Tests\Unit\Unparser;
 use Fantestic\CestManager\Contract\ScenarioInterface;
 use Fantestic\CestManager\Unparser\AstBuilder;
 use Fantestic\CestManager\Tests\Doubles\Action;
+use Fantestic\CestManager\Tests\Doubles\Collection;
 use Fantestic\CestManager\Tests\Doubles\Argument;
 use Fantestic\CestManager\Tests\Doubles\Parameter;
 use Fantestic\CestManager\Tests\Doubles\Scenario;
 use Fantestic\CestManager\Tests\Doubles\Step;
 use PhpParser\PrettyPrinter\Standard;
 use PHPUnit\Framework\TestCase;
+
+use PhpParser\NodeDumper;
+use PhpParser\ParserFactory;
 
 /**
  * 
@@ -21,16 +25,34 @@ use PHPUnit\Framework\TestCase;
  */
 final class AstBuilderTest extends TestCase
 {
-    public function testGeneratesValidAst() :void
+    public function testBuildScenarioCreatesValidAst() :void
     {
         $gen = new AstBuilder();
-        $res = $gen->buildScenarioAst($this->sampleTree());
+        $res = $gen->buildScenarioAst($this->sampleScenarioTree());
         $pp  = new Standard();
         $code = $pp->prettyPrint([$res->getNode()]);
-        $this->assertSame($this->sampleTreeExpectation(), $code);
+        $this->assertSame($this->sampleScenarioTreeExpectation(), $code);
     }
 
-    private function sampleTree() :ScenarioInterface
+
+    public function testBuildCollectionCreatesValidAst() :void
+    {
+        $collection = new Collection(
+            'Fantestic\CestManager\Test',
+            'SampleCest',
+            [
+                $this->sampleScenarioTree()
+            ]
+        );
+        $builder = new AstBuilder();
+        $ast = $builder->buildCollectionAst($collection);
+        $pp = new Standard();
+        $code = $pp->prettyPrint($ast);
+        $this->assertSame($this->sampleCollectionTreeExpectation(), $code);
+    }
+
+
+    private function sampleScenarioTree() :ScenarioInterface
     {
         return new Scenario(
             'theFirstTest',
@@ -53,7 +75,8 @@ final class AstBuilderTest extends TestCase
         );
     }
 
-    private function sampleTreeExpectation() :string
+
+    private function sampleScenarioTreeExpectation() :string
     {
         return <<<CODE
         /** @fantestic */
@@ -61,6 +84,30 @@ final class AstBuilderTest extends TestCase
         {
             \$I->amOnPage('/');
             \$I->see('Homepage');
+        }
+        CODE;
+    }
+
+
+    private function sampleCollectionTreeExpectation() :string
+    {
+        return <<<CODE
+        declare (strict_types=1);
+        namespace Fantestic\CestManager\Test;
+
+        /**
+         * These tests are managed by fantestic. Manual changes might break things.
+         *
+         * @fantestic
+         */
+        final class SampleCest
+        {
+            /** @fantestic */
+            function theFirstTest(\AcceptanceTester \$I) : void
+            {
+                \$I->amOnPage('/');
+                \$I->see('Homepage');
+            }
         }
         CODE;
     }

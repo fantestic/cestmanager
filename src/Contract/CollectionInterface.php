@@ -17,4 +17,8 @@ interface CollectionInterface
      * @return ScenarioInterface[]
      */
     public function getScenarios() :iterable;
+
+    public function getClassname() :string;
+
+    public function getNamespace() :string;
 }
