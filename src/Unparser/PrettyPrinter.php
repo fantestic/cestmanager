@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types = 1);
-namespace Fantestic\CestManager\Contract;
+namespace Fantestic\CestManager\Unparser;
 
 use PhpParser\PrettyPrinter\Standard;
 

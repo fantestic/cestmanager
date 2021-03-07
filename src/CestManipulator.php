@@ -6,7 +6,7 @@ namespace Fantestic\CestManager;
 use ArrayObject;
 use Exception;
 use Fantestic\CestManager\Contract\CollectionInterface;
-use Fantestic\CestManager\Contract\PrettyPrinter;
+use Fantestic\CestManager\Unparser\PrettyPrinter;
 use Fantestic\CestManager\Exception\FileExistsException;
 use Fantestic\CestManager\Exception\FileNotFoundException;
 use Fantestic\CestManager\Exception\InsufficientPermissionException;
