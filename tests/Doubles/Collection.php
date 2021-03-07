@@ -17,8 +17,14 @@ class Collection implements CollectionInterface
     public function __construct(
         public string $namespace,
         public string $classname,
-        public iterable $scenarios
+        public iterable $scenarios,
+        public string $subpath
     ) { }
+
+    public function getSubpath(): string
+    {
+        return $this->subpath;
+    }
 
     public function getClassname(): string
     {

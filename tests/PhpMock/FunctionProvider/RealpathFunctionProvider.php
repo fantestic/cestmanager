@@ -33,10 +33,8 @@ class RealpathFunctionProvider implements FunctionProvider
             $cleaned = [];
             foreach ($split as $item) {
                 if ($item === '.' || $item === '') {
-                    // If it's a ./ then it's nothing (just that dir) so don't add/delete anything
                 } elseif ($item === '..') {
-                    // Remove the last item added since .. negates it.
-                    $removed = array_pop($cleaned);
+                    array_pop($cleaned);
                 } else {
                     $cleaned[] = $item;
                 }

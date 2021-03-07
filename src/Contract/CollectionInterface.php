@@ -21,4 +21,6 @@ interface CollectionInterface
     public function getClassname() :string;
 
     public function getNamespace() :string;
+
+    public function getSubpath() :string;
 }

@@ -7,6 +7,7 @@ use Fantestic\CestManager\Exception\FileExistsException;
 use Fantestic\CestManager\Exception\FileNotFoundException;
 use Fantestic\CestManager\Exception\InsufficientPermissionException;
 use Fantestic\CestManager\Finder;
+use Fantestic\CestManager\Tests\PhpMock\FunctionProvider\FilePutContentsFunctionProvider;
 use Fantestic\CestManager\Tests\PhpMock\FunctionProvider\RealpathFunctionProvider;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
@@ -38,6 +39,7 @@ final class FinderTest extends  TestCase
     {
         if (false === self::$initialized) {
             $this->buildFilesystemMock('Fantestic\CestManager', 'realpath', new RealpathFunctionProvider());
+            $this->buildFilesystemMock('Fantestic\CestManager', 'file_put_contents', new FilePutContentsFunctionProvider());
             self::$initialized = true;
         }
         $this->root = vfsStream::setup('root', null, $this->sampleStructure());

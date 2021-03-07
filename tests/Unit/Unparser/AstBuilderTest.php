@@ -42,7 +42,8 @@ final class AstBuilderTest extends TestCase
             'SampleCest',
             [
                 $this->sampleScenarioTree()
-            ]
+            ],
+            'Test/SampleCest.php'
         );
         $builder = new AstBuilder();
         $ast = $builder->buildCollectionAst($collection);

@@ -133,7 +133,11 @@ class Finder
                 "Cant create file '{$subpath}' due to insufficient permissions."
             );
         }
-        $status = file_put_contents($this->buildFullpath($subpath), $contents);
+        $status = file_put_contents(
+            $this->buildFullpath($subpath),
+            $contents,
+            LOCK_EX
+        );
         if (false === $status) {
             throw new \RuntimeException(
                 "Could not create file '{$subpath}'."
