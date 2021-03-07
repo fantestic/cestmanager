@@ -138,6 +138,16 @@ final class FinderTest extends  TestCase
     }
 
 
+    public function testCreateFileCreatesRecursiveFolders() :void
+    {
+        $filename = 'Folder1/Folder2/RecursiveCreate.php';
+        $content = '<?php echo "recursive created";';
+        $finder = new Finder($this->root->url());
+        $finder->createFile($filename, $content);
+        $this->assertSame($content, $finder->getFileContents($filename));
+    }
+
+
     public function testCreateFileThrowsExceptionIfFileExists() :void
     {
         $this->expectException(FileExistsException::class);

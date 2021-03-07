@@ -128,6 +128,17 @@ class Finder
                 "The file '{$subpath}' already exists."
             );
         }
+        // create directory-structure if it doesnt exist
+        if(false !== strpos($subpath, '/')) {
+            $directoryPath = substr($subpath, 0, strrpos($subpath, '/'));
+            if (false === $this->hasFile($directoryPath)) {
+                if (false === mkdir($this->buildFullpath($directoryPath), 0777, true)) {
+                    throw new \RuntimeException(
+                        "Cant create folder-structure '{$directoryPath}'"
+                    );
+                }
+            }
+        }
         if(!$this->canWriteInContainingDirectory($subpath)) {
             throw new InsufficientPermissionException(
                 "Cant create file '{$subpath}' due to insufficient permissions."
