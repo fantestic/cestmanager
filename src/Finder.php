@@ -117,17 +117,11 @@ class Finder
      * @param string $subpath 
      * @param string $contents 
      * @return void 
-     * @throws FileExistsException 
      * @throws InsufficientPermissionException 
      * @throws RuntimeException 
      */
-    public function createFile(string $subpath, string $contents) :void
+    public function writeFile(string $subpath, string $contents) :void
     {
-        if ($this->hasFile($subpath)) {
-            throw new FileExistsException(
-                "The file '{$subpath}' already exists."
-            );
-        }
         // create directory-structure if it doesnt exist
         if(false !== strpos($subpath, '/')) {
             $directoryPath = substr($subpath, 0, strrpos($subpath, '/'));
