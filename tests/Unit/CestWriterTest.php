@@ -3,7 +3,7 @@
 declare(strict_types = 1);
 namespace Fantestic\CestManager\Tests\Unit;
 
-use Fantestic\CestManager\CestManipulator;
+use Fantestic\CestManager\CestWriter;
 use Fantestic\CestManager\CestReader\ReflectionCestReader;
 use Fantestic\CestManager\Contract\ScenarioInterface;
 use Fantestic\CestManager\Finder;
@@ -24,7 +24,7 @@ use PHPUnit\Framework\TestCase;
  * @author Gerald Baumeister <gerald@fantestic.io>
  * @license http://www.apache.org/licenses/LICENSE-2.0
  */
-final class CestManipulatorTest extends  VfsTestCase
+final class CestWriterTest extends  VfsTestCase
 {
     public function testCreateScenarioCreatesScenario() :void
     {
@@ -45,9 +45,9 @@ final class CestManipulatorTest extends  VfsTestCase
     }
 
 
-    private function makeCestManipulator() :CestManipulator
+    private function makeCestManipulator() :CestWriter
     {
-        return new CestManipulator(
+        return new CestWriter(
             new AstBuilder(),
             new PrettyPrinter(),
             $this->getFinder()

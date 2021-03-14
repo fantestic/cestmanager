@@ -3,6 +3,7 @@
 declare(strict_types = 1);
 namespace Fantestic\CestManager\CestReader;
 
+use Fantestic\CestManager\CestReader\Traits\ReflectionMaker;
 use Fantestic\CestManager\Exception\ClassNotFoundException;
 
 /**
@@ -14,7 +15,6 @@ use Fantestic\CestManager\Exception\ClassNotFoundException;
  */
 interface CestReaderInterface
 {
-
     /**
      * Retrieves a list of all Scenarios
      * 

@@ -29,7 +29,7 @@ use RuntimeException;
  * @author Gerald Baumeister <gerald@fantestic.io>
  * @license http://www.apache.org/licenses/LICENSE-2.0
  */
-class CestManipulator
+class CestWriter
 {
     /**
      * @throws FileNotFoundException
@@ -56,7 +56,7 @@ class CestManipulator
     {
         try {
             $ast = $this->astBuilder->buildCollectionAst($collection);
-            $this->finder->createFile(
+            $this->finder->writeFile(
                 $collection->getSubpath(),
                 $this->prettyPrinter->prettyPrintFile($ast)
             );

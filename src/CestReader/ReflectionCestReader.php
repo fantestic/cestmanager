@@ -3,8 +3,7 @@
 declare(strict_types = 1);
 namespace Fantestic\CestManager\CestReader;
 
-use Fantestic\CestManager\Exception\ClassNotFoundException;
-use ReflectionClass;
+use Fantestic\CestManager\CestReader\Traits\ReflectionMaker;
 
 /**
  * Read Information via the Php-Reflection API. Can be used for high-performance
@@ -16,6 +15,8 @@ use ReflectionClass;
  */
 class ReflectionCestReader implements CestReaderInterface
 {
+    use ReflectionMaker;
+
     /**
      * Retrieves a list of all Scenarios
      * 
@@ -32,14 +33,4 @@ class ReflectionCestReader implements CestReaderInterface
         return $scenarios;
     }
 
-
-    private function makeReflectionClass(string $classname) :ReflectionClass
-    {
-        if (!class_exists($classname)) {
-            throw new ClassNotFoundException(
-                "The class '{$classname}' could not be found!"
-            );
-        }
-        return new ReflectionClass($classname);
-    }
 }
