@@ -19,16 +19,28 @@ use Fantestic\CestManager\Dto\Step;
  */
 final class ParserCestReaderTest extends TestCase
 {
-    public function testGetStepsReturnsSteps() :void
+    public function testGetScenariosReturnsScenarios() :void
+    {
+        $reader = new ParserCestReader();
+        $scenarios = $reader->getScenarios(ExampleCest::class);
+        $this->assertEquals([$this->getTheFirstScenarioExpectation()], $scenarios);
+    }
+
+
+    public function testGetScenarioReturnsScenario() :void
     {
         $reader = new ParserCestReader();
         $scenario = $reader->getScenario(ExampleCest::class, 'theFirstTest');
 
+        $this->assertEquals($this->getTheFirstScenarioExpectation(), $scenario);
+    }
+
+    private function getTheFirstScenarioExpectation() :Scenario
+    {
         $steps = [
             new Step(0, new Action('amOnPage', []), [new ArgumentOut("'/'", 'string')]),
             new Step(1, new Action('see', []), [new ArgumentOut("'Homepage'", 'string')]),
         ];
-        $expected = new Scenario('theFirstTest', $steps);
-        $this->assertEquals($expected, $scenario);
+        return new Scenario('theFirstTest', $steps);
     }
 }

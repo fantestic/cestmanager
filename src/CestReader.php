@@ -31,15 +31,9 @@ class CestReader
      * 
      * @return string[] 
      */
-    public function getScenarioNames(string $classname) :array
+    public function getScenarios(string $classname) :iterable
     {
-        $scenarios = [];
-        foreach($this->makeReflectionClass($classname)->getMethods() as $method) {
-            if ($method->isPublic() && substr($method->getName(), 0, 1) !== '_') {
-                $scenarios[] = $method->getName();
-            }
-        }
-        return $scenarios;
+        return $this->parserCestReader->getScenarios($classname);
     }
 
 

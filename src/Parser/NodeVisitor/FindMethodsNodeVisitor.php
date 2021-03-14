@@ -25,7 +25,7 @@ class FindMethodsNodeVisitor extends NodeVisitorAbstract
     public function leaveNode(Node $node) :?int
     {
         if ($node instanceof ClassMethod) {
-            $this->methodNodes[$node->name] = $node;
+            $this->methodNodes[$node->name->name] = $node;
         }
         return null;
     }
@@ -33,7 +33,7 @@ class FindMethodsNodeVisitor extends NodeVisitorAbstract
     /**
      * @return ClassMethod[]
      */
-    public function getMethodNode() :array
+    public function getMethodNodes() :array
     {
         return $this->methodNodes;
     }
