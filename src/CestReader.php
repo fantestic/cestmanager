@@ -7,6 +7,7 @@ use Fantestic\CestManager\CestReader\ParserCestReader;
 use Fantestic\CestManager\Contract\CollectionInterface;
 use Fantestic\CestManager\Contract\ScenarioInterface;
 use Fantestic\CestManager\Dto\Scenario;
+use Fantestic\CestManager\Dto\Collection;
 use Fantestic\CestManager\Exception\ClassNotFoundException;
 use Fantestic\CestManager\Unparser\AstBuilder;
 use ReflectionClass;
@@ -31,9 +32,15 @@ class CestReader
      * 
      * @return string[] 
      */
-    public function getScenarios(string $classname) :iterable
+    public function getCollection(string $fullyQualifiedName) :Collection
     {
-        return $this->parserCestReader->getScenarios($classname);
+        $reflection = $this->makeReflectionClass($fullyQualifiedName);
+        $scenarios = $this->parserCestReader->getScenarios($fullyQualifiedName);
+        return new Collection(
+                $reflection->getName(),
+                $reflection->getNamespaceName(),
+                $scenarios
+        );
     }
 
 
@@ -49,13 +56,13 @@ class CestReader
     }
 
 
-    private function makeReflectionClass(string $classname) :ReflectionClass
+    private function makeReflectionClass(string $fullyQualifiedName) :ReflectionClass
     {
-        if (!class_exists($classname)) {
+        if (!class_exists($fullyQualifiedName)) {
             throw new ClassNotFoundException(
-                "The class '{$classname}' could not be found!"
+                "The class '{$fullyQualifiedName}' could not be found!"
             );
         }
-        return new ReflectionClass($classname);
+        return new ReflectionClass($fullyQualifiedName);
     }
 }
