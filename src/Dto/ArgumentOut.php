@@ -28,6 +28,7 @@ class ArgumentOut implements ArgumentInterface
     {
         $this->value = $value;
         $this->type = $type;
+        $this->expression = $expression;
     }
 
 

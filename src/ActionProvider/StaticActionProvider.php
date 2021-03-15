@@ -51,6 +51,7 @@ class StaticActionProvider implements ActionProviderInterface
                 ]
             ],
         ];
+
         foreach ($actions as $action) {
             yield $this->createAction($action);
         }
