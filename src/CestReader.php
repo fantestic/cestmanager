@@ -9,7 +9,9 @@ use Fantestic\CestManager\Contract\ScenarioInterface;
 use Fantestic\CestManager\Dto\Scenario;
 use Fantestic\CestManager\Dto\Collection;
 use Fantestic\CestManager\Exception\ClassNotFoundException;
+use Fantestic\CestManager\Exception\UnprocessableScenarioException;
 use Fantestic\CestManager\Unparser\AstBuilder;
+use LogicException;
 use ReflectionClass;
 
 /**
@@ -28,9 +30,12 @@ class CestReader
 
 
     /**
-     * Retrieves a list of all Scenarios
      * 
-     * @return string[] 
+     * @param string $fullyQualifiedName 
+     * @return Collection 
+     * @throws ClassNotFoundException 
+     * @throws LogicException 
+     * @throws UnprocessableScenarioException 
      */
     public function getCollection(string $fullyQualifiedName) :Collection
     {

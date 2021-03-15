@@ -134,7 +134,7 @@ class ParserCestReader
     {
         $arguments = [];
         foreach ($astArguments as $argument) {
-            $arguments[] = ArgumentOut::fromPhpParserNode($argument->value);
+            $arguments[] = ArgumentOut::fromPhpParserNode($argument);
         }
         return $arguments;
     }
