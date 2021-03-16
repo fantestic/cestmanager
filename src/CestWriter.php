@@ -109,7 +109,7 @@ class CestWriter
                 sprintf(
                     'Method "%s" does not exist in Cest "%s".',
                     $scenario->getMethodName(),
-                    $collection->getNamespace() . '\\' . $collection->getClassname()
+                    $collection->getFullyQualifiedClassname()
                 )
             );
         }
@@ -141,7 +141,7 @@ class CestWriter
 
     private function overwriteScenarioInAst(
         ScenarioInterface $scenario,
-        array &$ast
+        array $ast
     ) :array
     {
         $scenarioAst = $this->astBuilder->buildScenarioAst($scenario);
@@ -149,8 +149,7 @@ class CestWriter
             $scenario->getMethodName(),
             $scenarioAst->getNode()->getStmts()
         );
-        $this->traverse($ast, [$overwriteMethodNodeVisitor]);
-        return $ast;
+        return $this->traverse($ast, [$overwriteMethodNodeVisitor]);
     }
 
 
@@ -171,12 +170,12 @@ class CestWriter
      * @return void 
      * @throws LogicException 
      */
-    private function traverse(array &$ast, array $nodeVisitors) :void
+    private function traverse(array $ast, array $nodeVisitors) :array
     {
         $traverser = new NodeTraverser();
         foreach ($nodeVisitors as $nodeVisitor) {
             $traverser->addVisitor($nodeVisitor);
         }
-        $traverser->traverse($ast);
+        return $traverser->traverse($ast);
     }
 }

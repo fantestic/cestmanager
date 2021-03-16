@@ -57,9 +57,9 @@ final class CestWriterTest extends  VfsTestCase
         $manipulator->updateScenario($collection, $scenario);
         $content = $this->getFinder()->getFileContents(self::ROOTFILE_PATH);
 
-        // rough string the new lines are written
+        // rough test to see if the new lines are written
         $this->assertStringContainsString(
-            $scenario->getSteps()[0]->getaction()->getMethodName(),
+            '$I->amOnPage(\'/example\');',
             $content
         );
     }

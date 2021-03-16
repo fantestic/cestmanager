@@ -37,7 +37,7 @@ class OverwriteMethodNodeVisitor extends NodeVisitorAbstract
 
     public function leaveNode(Node $node) :?int
     {
-        if ($node instanceof ClassMethod && $node->name === $this->methodName) {
+        if ($node instanceof ClassMethod && $node->name->name === $this->methodName) {
             $node->stmts = $this->methodBody;
             return NodeTraverser::STOP_TRAVERSAL;
         }
