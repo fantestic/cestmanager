@@ -59,12 +59,6 @@ class ArgumentOut implements ArgumentInterface
     }
 
 
-    public function getParameterName() :?string
-    {
-        return $this->parameterName;
-    }
-
-
     private static function getValueFromNode(Arg $node) :mixed
     {
         if ($node->value instanceof String_) {

@@ -55,7 +55,7 @@ class CestReader
     ) :Scenario
     {
         return $this->parserCestReader->getScenario(
-            $collection->getClassname(),
+            $collection->getNamespace() . '\\' . $collection->getClassname(),
             $scenario->getMethodName()
         );
     }
