@@ -21,6 +21,11 @@ class Collection implements CollectionInterface
         public string $subpath
     ) { }
 
+    public function getFullyQualifiedClassname(): string
+    {
+        return $this->getNamespace() . '\\' . $this->getClassname();
+    }
+
     public function getSubpath(): string
     {
         return $this->subpath;

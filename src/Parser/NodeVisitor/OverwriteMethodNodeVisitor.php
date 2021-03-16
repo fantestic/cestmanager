@@ -1,7 +1,6 @@
 <?php
 
 declare(strict_types = 1);
-
 namespace Fantestic\CestManager\Parser\NodeVisitor;
 
 use PhpParser\NodeVisitorAbstract;
@@ -24,6 +23,7 @@ class OverwriteMethodNodeVisitor extends NodeVisitorAbstract
      */
     private array $methodBody;
 
+
     /**
      * @var string $methodName
      * @var Node[] $stmts
@@ -33,6 +33,7 @@ class OverwriteMethodNodeVisitor extends NodeVisitorAbstract
         $this->methodName = $methodName;
         $this->methodBody = $methodBody;
     }
+
 
     public function leaveNode(Node $node) :?int
     {

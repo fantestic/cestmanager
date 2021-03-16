@@ -38,8 +38,8 @@ final class ParserCestReaderTest extends TestCase
     private function getTheFirstScenarioExpectation() :Scenario
     {
         $steps = [
-            new Step(0, new Action('amOnPage', []), [new ArgumentOut("/", 'string')]),
-            new Step(1, new Action('see', []), [new ArgumentOut("Homepage", 'string')]),
+            new Step(0, new Action('amOnPage', []), [new ArgumentOut("/", 'string', "'/'")]),
+            new Step(1, new Action('see', []), [new ArgumentOut("Homepage", 'string', "'Homepage'")]),
         ];
         return new Scenario('theFirstTest', $steps);
     }

@@ -3,6 +3,7 @@
 declare(strict_types = 1);
 namespace Fantestic\CestManager\Tests\Unit;
 
+use Fantestic\CestManager\CestReader\ParserCestReader;
 use Fantestic\CestManager\CestWriter;
 use Fantestic\CestManager\CestReader\ReflectionCestReader;
 use Fantestic\CestManager\Contract\ScenarioInterface;
@@ -39,7 +40,26 @@ final class CestWriterTest extends  VfsTestCase
         // rough test to see if the new method has been written
         $this->assertStringContainsString($scenario->getMethodName(), $content);
         $this->assertStringContainsString(
-            $scenario->getSteps()[0]->getAction()->getMethodName(),
+            $scenario->getSteps()[0]->getArguments()[0]->getValue(),
+            $content
+        );
+    }
+
+
+    public function testUpdateScenarioUpdatesScenario() :void
+    {
+        $scenario = $this->sampleScenarioTree();
+        $scenario->methodName = 'theFirstTest';
+        $collection = $this->getRootfileCollection();
+        
+
+        $manipulator = $this->makeCestManipulator();
+        $manipulator->updateScenario($collection, $scenario);
+        $content = $this->getFinder()->getFileContents(self::ROOTFILE_PATH);
+
+        // rough string the new lines are written
+        $this->assertStringContainsString(
+            $scenario->getSteps()[0]->getaction()->getMethodName(),
             $content
         );
     }
@@ -50,7 +70,8 @@ final class CestWriterTest extends  VfsTestCase
         return new CestWriter(
             new AstBuilder(),
             new PrettyPrinter(),
-            $this->getFinder()
+            $this->getFinder(),
+            new ParserCestReader()
         );
     }
 

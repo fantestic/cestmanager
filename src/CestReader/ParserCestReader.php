@@ -79,6 +79,15 @@ class ParserCestReader
     }
 
 
+    public function getAstForClass(string $classname) :array
+    {
+        $reflectionClass = $this->makeReflectionClass($classname);
+        return $this->getParser()->parse(
+            file_get_contents($reflectionClass->getFileName())
+        );
+    }
+
+
     private function isFantesticScenarioNode(ClassMethod $methodNode) :bool
     {
         $startsWithUnderscore = ('_' === substr($methodNode->name->toString(), 0, 1));
@@ -144,15 +153,6 @@ class ParserCestReader
     {
         // @TODO implement Reader
         return new Action($methodname, []);
-    }
-
-
-    private function getAstForClass(string $classname) :array
-    {
-        $reflectionClass = $this->makeReflectionClass($classname);
-        return $this->getParser()->parse(
-            file_get_contents($reflectionClass->getFileName())
-        );
     }
 
     private function getParser() :Parser
