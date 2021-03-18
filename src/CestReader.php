@@ -9,6 +9,7 @@ use Fantestic\CestManager\Contract\ScenarioInterface;
 use Fantestic\CestManager\Dto\Scenario;
 use Fantestic\CestManager\Dto\Collection;
 use Fantestic\CestManager\Exception\ClassNotFoundException;
+use Fantestic\CestManager\Exception\MethodNotFoundException;
 use Fantestic\CestManager\Exception\UnprocessableScenarioException;
 use Fantestic\CestManager\Unparser\AstBuilder;
 use LogicException;
@@ -58,6 +59,19 @@ class CestReader
             $collection->getNamespace() . '\\' . $collection->getClassname(),
             $scenario->getMethodName()
         );
+    }
+
+
+    public function hasScenario(
+        CollectionInterface $collection,
+        ScenarioInterface $scenario
+    ) {
+        try {
+            $this->getScenario($collection,$scenario);
+        } catch (ClassNotFoundException|MethodNotFoundException $e) {
+            return false;
+        }
+        return true;
     }
 
 
