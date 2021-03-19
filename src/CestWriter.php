@@ -76,7 +76,9 @@ class CestWriter
         ScenarioInterface $scenario
     ) :void
     {
-        $ast = $this->astBuilder->buildCollectionAst($collection);
+        $ast = $this->parserCestReader->getAstForClass(
+            $collection->getFullyQualifiedClassname()
+        );
         $methodNode = $this->findScenarioInAst($scenario, $ast);
         if (!is_null($methodNode)) {
             throw new MethodExistsException(
