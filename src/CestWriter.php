@@ -18,6 +18,8 @@ use Fantestic\CestManager\Unparser\AstBuilder;
 use Fantestic\CestManager\Parser\NodeVisitor\AddMethodNodeVisitor;
 use Fantestic\CestManager\Parser\NodeVisitor\FindMethodNodeVisitor;
 use Fantestic\CestManager\Parser\NodeVisitor\OverwriteMethodNodeVisitor;
+use Fantestic\CestManager\Parser\NodeVisitor\ProhibitMethodTraversalNodeVisitor;
+use Fantestic\CestManager\Parser\NodeVisitor\RemoveMethodNodeVisitor;
 use Iterator;
 use PhpParser\Error;
 use LogicException;
@@ -124,6 +126,38 @@ class CestWriter
     }
 
 
+    public function removeScenario (
+        CollectionInterface $collection,
+        ScenarioInterface $scenario
+    ) :void
+    {
+        $ast = $this->parserCestReader->getAstForClass(
+            $collection->getFullyQualifiedClassname()
+        );
+        $methodNode = $this->findScenarioInAst($scenario, $ast);
+        if (is_null($methodNode)) {
+            throw new MethodNotFoundException(
+                sprintf(
+                    'Method "%s" does not exist in Cest "%s".',
+                    $scenario->getMethodName(),
+                    $collection->getFullyQualifiedClassname()
+                )
+            );
+        }
+        $updatedAst = $this->traverse(
+            $ast,
+            [
+                new RemoveMethodNodeVisitor($scenario->getMethodName()),
+                new ProhibitMethodTraversalNodeVisitor(),
+            ]
+        );
+        $this->finder->writeFile(
+            $collection->getSubpath(),
+            $this->prettyPrinter->prettyPrintFile($updatedAst)
+        );
+    }
+
+
     /**
      * 
      * @param ScenarioInterface $scenario 
@@ -136,6 +170,7 @@ class CestWriter
         $findMethodNodeVisitor = new FindMethodNodeVisitor($scenario->getMethodName());
         $traverser = new NodeTraverser();
         $traverser->addVisitor($findMethodNodeVisitor);
+        $traverser->addVisitor(new ProhibitMethodTraversalNodeVisitor());
         $traverser->traverse($ast);
         return $findMethodNodeVisitor->getMethodNode();
     }

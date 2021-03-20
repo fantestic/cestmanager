@@ -7,6 +7,7 @@ use Fantestic\CestManager\CestReader\ParserCestReader;
 use Fantestic\CestManager\CestWriter;
 use Fantestic\CestManager\CestReader\ReflectionCestReader;
 use Fantestic\CestManager\Contract\ScenarioInterface;
+use Fantestic\CestManager\Dto\Scenario as DtoScenario;
 use Fantestic\CestManager\Finder;
 use Fantestic\CestManager\Tests\Doubles\Action;
 use Fantestic\CestManager\Tests\Doubles\Argument;
@@ -62,6 +63,18 @@ final class CestWriterTest extends  VfsTestCase
             '$I->amOnPage(\'/example\');',
             $content
         );
+    }
+
+
+    public function testRemoveScenarioRemovesScenario() :void
+    {
+        $writer = $this->makeCestManipulator();
+        $collection = $this->getRootfileCollection();
+        $scenario = new DtoScenario('theFirstTest', []);
+        $writer->removeScenario($collection, $scenario);
+        $content = $this->getFinder()->getFileContents(self::ROOTFILE_PATH);
+        
+        $this->assertStringNotContainsString('theFirstTest', $content);
     }
 
 
