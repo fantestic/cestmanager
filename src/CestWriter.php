@@ -72,14 +72,13 @@ class CestWriter
         }
     }
 
-
     public function createScenario(
         CollectionInterface $collection,
         ScenarioInterface $scenario
     ) :void
     {
-        $ast = $this->parserCestReader->getAstForClass(
-            $collection->getFullyQualifiedClassname()
+        $ast = $this->parserCestReader->getAst(
+            $collection->getSubpath()
         );
         $methodNode = $this->findScenarioInAst($scenario, $ast);
         if (!is_null($methodNode)) {
@@ -98,14 +97,13 @@ class CestWriter
         );
     }
 
-
     public function updateScenario(
         CollectionInterface $collection,
         ScenarioInterface $scenario
     ) :void
     {
-        $ast = $this->parserCestReader->getAstForClass(
-            $collection->getFullyQualifiedClassname()
+        $ast = $this->parserCestReader->getAst(
+            $collection->getSubpath()
         );
         $methodNode = $this->findScenarioInAst($scenario, $ast);
         if (is_null($methodNode)) {
@@ -125,14 +123,13 @@ class CestWriter
         );
     }
 
-
     public function removeScenario (
         CollectionInterface $collection,
         ScenarioInterface $scenario
     ) :void
     {
-        $ast = $this->parserCestReader->getAstForClass(
-            $collection->getFullyQualifiedClassname()
+        $ast = $this->parserCestReader->getAst(
+            $collection->getSubpath()
         );
         $methodNode = $this->findScenarioInAst($scenario, $ast);
         if (is_null($methodNode)) {
@@ -157,7 +154,6 @@ class CestWriter
         );
     }
 
-
     /**
      * 
      * @param ScenarioInterface $scenario 
@@ -175,7 +171,6 @@ class CestWriter
         return $findMethodNodeVisitor->getMethodNode();
     }
 
-
     private function overwriteScenarioInAst(
         ScenarioInterface $scenario,
         array $ast
@@ -188,7 +183,6 @@ class CestWriter
         );
         return $this->traverse($ast, [$overwriteMethodNodeVisitor]);
     }
-
 
     private function injectScenarioIntoAst(
         ScenarioInterface $scenario,

@@ -10,6 +10,8 @@ use Fantestic\CestManager\Dto\Action;
 use Fantestic\CestManager\Dto\ArgumentOut;
 use Fantestic\CestManager\Dto\Scenario;
 use Fantestic\CestManager\Dto\Step;
+use Fantestic\CestManager\Finder;
+use Fantestic\CestManager\Tests\VfsTestCase;
 
 /**
  * 
@@ -17,11 +19,11 @@ use Fantestic\CestManager\Dto\Step;
  * @author Gerald Baumeister <gerald@fantestic.io>
  * @license http://www.apache.org/licenses/LICENSE-2.0
  */
-final class ParserCestReaderTest extends TestCase
+final class ParserCestReaderTest extends VfsTestCase
 {
     public function testGetScenariosReturnsScenarios() :void
     {
-        $reader = new ParserCestReader();
+        $reader = new ParserCestReader($this->getFinder());
         $scenarios = $reader->getScenarios(ExampleCest::class);
         $this->assertEquals([$this->getTheFirstScenarioExpectation()], $scenarios);
     }
@@ -29,7 +31,7 @@ final class ParserCestReaderTest extends TestCase
 
     public function testGetScenarioReturnsScenario() :void
     {
-        $reader = new ParserCestReader();
+        $reader = new ParserCestReader($this->getFinder());
         $scenario = $reader->getScenario(ExampleCest::class, 'theFirstTest');
 
         $this->assertEquals($this->getTheFirstScenarioExpectation(), $scenario);

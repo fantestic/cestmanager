@@ -13,10 +13,10 @@ use Fantestic\CestManager\Dto\ArgumentOut;
 use Fantestic\CestManager\Exception\ClassNotFoundException;
 use Fantestic\CestManager\Exception\UnprocessableScenarioException;
 use Fantestic\CestManager\Parser\NodeVisitor\FindMethodsNodeVisitor;
+use Fantestic\CestManager\Finder;
 use LogicException;
-use PhpParser\{Node, NodeTraverser, NodeVisitorAbstract, Parser, ParserFactory};
+use PhpParser\{Node, NodeTraverser, Parser, ParserFactory};
 use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\Node\Stmt\Function_;
 
 /**
  * Read via PHP-Parser. Slow performance but can give access to Scenario-Body.
@@ -28,6 +28,10 @@ use PhpParser\Node\Stmt\Function_;
 class ParserCestReader
 {
     use ReflectionMaker;
+
+    public function __construct(
+        private Finder $finder
+    ) { }
 
     /**
      * 
@@ -47,7 +51,6 @@ class ParserCestReader
         }
         return $scenarios;
     }
-
 
     /**
      * 
@@ -78,22 +81,18 @@ class ParserCestReader
         return $this->buildScenarioFromNode($findMethodNodeVisitor->getMethodNode());
     }
 
-
-    public function getAstForClass(string $classname) :array
+    public function getAst(string $subpath) :array
     {
-        $reflectionClass = $this->makeReflectionClass($classname);
         return $this->getParser()->parse(
-            file_get_contents($reflectionClass->getFileName())
+            $this->finder->getFileContents($subpath)
         );
     }
-
 
     private function isFantesticScenarioNode(ClassMethod $methodNode) :bool
     {
         $startsWithUnderscore = ('_' === substr($methodNode->name->toString(), 0, 1));
         return ($methodNode->isPublic() && !$startsWithUnderscore);
     }
-
 
     private function buildScenarioFromNode(ClassMethod $methodNode) :Scenario
     {
@@ -115,7 +114,6 @@ class ParserCestReader
         return new Scenario($methodNode->name->toString(), $steps);
     }
 
-
     /**
      * Does a quick check to see if the node seems to be a valid Fantestic Step.
      * This function is not reliable for in-depth check as it does not walk the AST.
@@ -132,7 +130,6 @@ class ParserCestReader
         );
     }
 
-
     /**
      * 
      * @param iterable $astArguments 
@@ -147,7 +144,6 @@ class ParserCestReader
         }
         return $arguments;
     }
-
 
     private function getAction(string $methodname) :Action
     {
