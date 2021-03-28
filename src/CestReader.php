@@ -29,7 +29,6 @@ class CestReader
         private ParserCestReader $parserCestReader
     ) {}
 
-
     /**
      * 
      * @param string $fullyQualifiedName 
@@ -40,15 +39,13 @@ class CestReader
      */
     public function getCollection(string $fullyQualifiedName) :Collection
     {
-        $reflection = $this->makeReflectionClass($fullyQualifiedName);
         $scenarios = $this->parserCestReader->getScenarios($fullyQualifiedName);
         return new Collection(
-                $reflection->getName(),
-                $reflection->getNamespaceName(),
+                substr($fullyQualifiedName, strrpos($fullyQualifiedName, '\\')+1),
+                substr($fullyQualifiedName, strpos($fullyQualifiedName, '\\')),
                 $scenarios
         );
     }
-
 
     public function getScenario(
         CollectionInterface $collection,
@@ -61,7 +58,6 @@ class CestReader
         );
     }
 
-
     public function hasScenario(
         CollectionInterface $collection,
         ScenarioInterface $scenario
@@ -72,16 +68,5 @@ class CestReader
             return false;
         }
         return true;
-    }
-
-
-    private function makeReflectionClass(string $fullyQualifiedName) :ReflectionClass
-    {
-        if (!class_exists($fullyQualifiedName)) {
-            throw new ClassNotFoundException(
-                "The class '{$fullyQualifiedName}' could not be found!"
-            );
-        }
-        return new ReflectionClass($fullyQualifiedName);
     }
 }
