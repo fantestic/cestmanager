@@ -37,12 +37,12 @@ class CestReader
      * @throws LogicException 
      * @throws UnprocessableScenarioException 
      */
-    public function getCollection(string $fullyQualifiedName) :Collection
+    public function getCollection(CollectionInterface $collection) :Collection
     {
-        $scenarios = $this->parserCestReader->getScenarios($fullyQualifiedName);
+        $scenarios = $this->parserCestReader->getScenarios($collection);
         return new Collection(
-                substr($fullyQualifiedName, strrpos($fullyQualifiedName, '\\')+1),
-                substr($fullyQualifiedName, strpos($fullyQualifiedName, '\\')),
+                $collection->getClassname(),
+                $collection->getNamespace(),
                 $scenarios
         );
     }
@@ -53,7 +53,7 @@ class CestReader
     ) :Scenario
     {
         return $this->parserCestReader->getScenario(
-            $collection->getNamespace() . '\\' . $collection->getClassname(),
+            $collection,
             $scenario->getMethodName()
         );
     }

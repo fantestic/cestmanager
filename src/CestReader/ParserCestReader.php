@@ -4,12 +4,14 @@ declare(strict_types = 1);
 namespace Fantestic\CestManager\CestReader;
 
 use Fantestic\CestManager\CestReader\Traits\ReflectionMaker;
+use Fantestic\CestManager\Contract\CollectionInterface;
 use Fantestic\CestManager\Dto\Scenario;
 use Fantestic\CestManager\Dto\Step;
 use Fantestic\CestManager\Exception\MethodNotFoundException;
 use Fantestic\CestManager\Parser\NodeVisitor\FindMethodNodeVisitor;
 use Fantestic\CestManager\Dto\Action;
 use Fantestic\CestManager\Dto\ArgumentOut;
+use Fantestic\CestManager\Dto\Collection;
 use Fantestic\CestManager\Exception\ClassNotFoundException;
 use Fantestic\CestManager\Exception\UnprocessableScenarioException;
 use Fantestic\CestManager\Parser\NodeVisitor\FindMethodsNodeVisitor;
@@ -37,12 +39,12 @@ class ParserCestReader
      * 
      * @return iterable | Scenario[]
      */
-    public function getScenarios(string $classname) :iterable
+    public function getScenarios(CollectionInterface $collection) :iterable
     {
         $traverser = new NodeTraverser();
         $findMethodNodeVisitor = new FindMethodsNodeVisitor();
         $traverser->addVisitor($findMethodNodeVisitor);
-        $traverser->traverse($this->getAstForClass($classname));
+        $traverser->traverse($this->getAst($collection->getSubpath()));
         $scenarios = [];
         foreach ($findMethodNodeVisitor->getMethodNodes() as $methodNode) {
             if ($this->isFantesticScenarioNode($methodNode)) {
@@ -62,15 +64,15 @@ class ParserCestReader
      * @throws MethodNotFoundException 
      * @throws UnprocessableScenarioException 
      */
-    public function getScenario(string $classname, string $methodname) :Scenario
+    public function getScenario(CollectionInterface $collection, string $methodname) :Scenario
     {
         $traverser = new NodeTraverser();
         $findMethodNodeVisitor = new FindMethodNodeVisitor($methodname);
         $traverser->addVisitor($findMethodNodeVisitor);
-        $traverser->traverse($this->getAstForClass($classname));
+        $traverser->traverse($this->getAst($collection->getSubpath()));
         if (false === $findMethodNodeVisitor->methodWasFound()) {
             throw new MethodNotFoundException(
-                "The method '{$methodname}' does not exist in class '{$classname}'."
+                "The method '{$methodname}' does not exist in class '{$collection->getFullyQualifiedClassname()}'."
             );
         }
         if (!$this->isFantesticScenarioNode($findMethodNodeVisitor->getMethodNode())) {
@@ -156,5 +158,4 @@ class ParserCestReader
         $factory = new ParserFactory();
         return $factory->create(ParserFactory::PREFER_PHP7);
     }
-
 }
