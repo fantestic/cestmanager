@@ -37,7 +37,7 @@ final class CestReaderTest extends  VfsTestCase
 
     public function testHasScenarioReturnsTrueIfScenarioExists() :void
     {
-        $cestReader = new CestReader(new AstBuilder(), new ParserCestReader());
+        $cestReader = new CestReader(new AstBuilder(), new ParserCestReader($this->getFinder()));
         $collection = new Collection(
             self::ROOTFILE_NAMESPACE,
             self::ROOTFILE_CLASSNAME,
@@ -51,7 +51,7 @@ final class CestReaderTest extends  VfsTestCase
 
     public function testHasScenarioReturnsFalseIfScenarioDoesntExists() :void
     {
-        $cestReader = new CestReader(new AstBuilder(), new ParserCestReader());
+        $cestReader = new CestReader(new AstBuilder(), new ParserCestReader($this->getFinder()));
         $collection = new Collection(
             self::ROOTFILE_NAMESPACE,
             self::ROOTFILE_CLASSNAME,

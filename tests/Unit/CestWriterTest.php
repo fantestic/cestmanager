@@ -5,20 +5,16 @@ namespace Fantestic\CestManager\Tests\Unit;
 
 use Fantestic\CestManager\CestReader\ParserCestReader;
 use Fantestic\CestManager\CestWriter;
-use Fantestic\CestManager\CestReader\ReflectionCestReader;
 use Fantestic\CestManager\Contract\ScenarioInterface;
 use Fantestic\CestManager\Dto\Scenario as DtoScenario;
-use Fantestic\CestManager\Finder;
 use Fantestic\CestManager\Tests\Doubles\Action;
 use Fantestic\CestManager\Tests\Doubles\Argument;
-use Fantestic\CestManager\Tests\Doubles\Collection;
 use Fantestic\CestManager\Tests\Doubles\Parameter;
 use Fantestic\CestManager\Tests\Doubles\Scenario;
 use Fantestic\CestManager\Tests\Doubles\Step;
 use Fantestic\CestManager\Tests\VfsTestCase;
 use Fantestic\CestManager\Unparser\AstBuilder;
 use Fantestic\CestManager\Unparser\PrettyPrinter;
-use PHPUnit\Framework\TestCase;
 
 /**
  * 
@@ -84,7 +80,7 @@ final class CestWriterTest extends  VfsTestCase
             new AstBuilder(),
             new PrettyPrinter(),
             $this->getFinder(),
-            new ParserCestReader()
+            new ParserCestReader($this->getFinder())
         );
     }
 

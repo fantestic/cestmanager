@@ -3,14 +3,11 @@
 declare(strict_types = 1);
 namespace Fantestic\CestManager\Tests\Unit\CestReader;
 
-use Fantestic\CestManager\Tests\Cest\ExampleCest;
-use PHPUnit\Framework\TestCase;
 use Fantestic\CestManager\CestReader\ParserCestReader;
 use Fantestic\CestManager\Dto\Action;
 use Fantestic\CestManager\Dto\ArgumentOut;
 use Fantestic\CestManager\Dto\Scenario;
 use Fantestic\CestManager\Dto\Step;
-use Fantestic\CestManager\Finder;
 use Fantestic\CestManager\Tests\VfsTestCase;
 
 /**
@@ -24,7 +21,7 @@ final class ParserCestReaderTest extends VfsTestCase
     public function testGetScenariosReturnsScenarios() :void
     {
         $reader = new ParserCestReader($this->getFinder());
-        $scenarios = $reader->getScenarios(ExampleCest::class);
+        $scenarios = $reader->getScenarios($this->getRootfileCollection());
         $this->assertEquals([$this->getTheFirstScenarioExpectation()], $scenarios);
     }
 
@@ -32,7 +29,7 @@ final class ParserCestReaderTest extends VfsTestCase
     public function testGetScenarioReturnsScenario() :void
     {
         $reader = new ParserCestReader($this->getFinder());
-        $scenario = $reader->getScenario(ExampleCest::class, 'theFirstTest');
+        $scenario = $reader->getScenario($this->getRootfileCollection(), 'theFirstTest');
 
         $this->assertEquals($this->getTheFirstScenarioExpectation(), $scenario);
     }
